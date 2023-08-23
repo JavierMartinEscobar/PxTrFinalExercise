@@ -1,14 +1,14 @@
 server:
   port: 8081
 
+application:
+  name: config-service
+
 spring:
   cloud:
     config:
       server:
         git:
           default-label: main
-          uri: https://github.com/JavierMartinEscobar/PxTrFinalExercise.git
+          uri: https://github.com/JavierMartinEscobar/PxTrFinalExercise
           search-paths: config-data
-
-  application:
-    name: config-service
