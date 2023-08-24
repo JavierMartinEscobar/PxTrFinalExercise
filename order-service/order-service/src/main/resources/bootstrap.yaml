@@ -1,6 +1,14 @@
 spring:
   application:
     name: order-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/order_db
+    username: order
+    password: order_123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
   cloud:
     config:
       enabled: true
