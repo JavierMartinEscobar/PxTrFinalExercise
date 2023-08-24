@@ -1,0 +1,9 @@
+server:
+  port: 8100
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    instanceId: ${spring.application.name}:${spring.application.instance_id:random.value}
