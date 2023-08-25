@@ -1,17 +1,16 @@
 package org.Plexus.productservice;
 
+import org.Plexus.productservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableDiscoveryClient
-public class ProductServiceApplication implements CommandLineRunner {
+public class ProductServiceApplication {
 
 	@Autowired
 	private ProductRepository productRepository;
@@ -20,14 +19,4 @@ public class ProductServiceApplication implements CommandLineRunner {
 		SpringApplication.run(ProductServiceApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-
-		productRepository.deleteAll();
-
-		Product testProduct = new Product(11L, "Hola", "123", 3.1);
-		productRepository.save(testProduct);
-
-		System.out.println(productRepository.findAll());
-	}
 }
