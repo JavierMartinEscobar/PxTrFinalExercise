@@ -27,5 +27,7 @@ public class ProductServiceApplication implements CommandLineRunner {
 
 		Product testProduct = new Product(11L, "Hola", "123", 3.1);
 		productRepository.save(testProduct);
+
+		System.out.println(productRepository.findAll());
 	}
 }

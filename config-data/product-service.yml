@@ -14,5 +14,5 @@ spring:
       host: "localhost"
       port: 27017
       database: "product_db"
-      username: "product"
+      username: "Products"
       password: "product"
