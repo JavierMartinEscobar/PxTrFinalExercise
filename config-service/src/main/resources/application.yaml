@@ -9,6 +9,6 @@ spring:
     config:
       server:
         git:
-          default-label: develop_j
+          default-label: develop
           uri: https://github.com/JavierMartinEscobar/PxTrFinalExercise
           search-paths: config-data
