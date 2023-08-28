@@ -1,6 +1,5 @@
 package org.plexus.orderservice.service;
 
-import jakarta.ws.rs.NotFoundException;
 import org.plexus.orderservice.model.Order;
 import org.plexus.orderservice.repository.OrderLineItemRepository;
 import org.plexus.orderservice.repository.OrderRepository;

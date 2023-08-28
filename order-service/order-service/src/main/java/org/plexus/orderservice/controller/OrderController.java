@@ -18,38 +18,39 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getOrders() {
+        List<Order> orders = orderService.getAll();
         return ResponseEntity.ok(orderService.getAll());
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable long id) {
-        Optional<Order> product = orderService.getOrderById(id);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Order> order = orderService.getOrderById(id);
+        return order.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(consumes = {"application/json"})
-    public ResponseEntity<Order> createProduct(@Validated @RequestBody Order order) {
+    public ResponseEntity<Order> createOrder(@Validated @RequestBody Order order) {
         orderService.createOrder(order);
         return ResponseEntity.ok(order);
     }
 
     @PutMapping(value = "/{id}",  consumes = {"application/json"})
-    public ResponseEntity<Order> updateProduct(@Validated @RequestBody Order order, @PathVariable long id) {
-        Optional<Order> dbProduct = orderService.getOrderById(id);
-        if(dbProduct.isEmpty()) {
+    public ResponseEntity<Order> updateOrder(@Validated @RequestBody Order order, @PathVariable long id) {
+        Optional<Order> dbOrder = orderService.getOrderById(id);
+        if(dbOrder.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            dbProduct.get().setOrderNumber(order.getOrderNumber());
-            dbProduct.get().setPrice(order.getPrice());
-            orderService.updateOrder(dbProduct.get());
-            return ResponseEntity.ok(dbProduct.get());
+            dbOrder.get().setOrderNumber(order.getOrderNumber());
+            dbOrder.get().setPrice(order.getPrice());
+            orderService.updateOrder(dbOrder.get());
+            return ResponseEntity.ok(dbOrder.get());
         }
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Order> deleteOrder(@PathVariable long id){
-        Optional<Order> dbProduct = orderService.getOrderById(id);
-        if(dbProduct.isEmpty()) {
+        Optional<Order> dbOrder = orderService.getOrderById(id);
+        if(dbOrder.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
             orderService.deleteOrder(id);

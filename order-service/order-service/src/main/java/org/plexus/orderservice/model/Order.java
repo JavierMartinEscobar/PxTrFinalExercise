@@ -16,9 +16,10 @@ public class Order {
     private String orderNumber;
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderLineItem> orderLineItem;
-
     @Column(name = "price")
     private double price;
+
+
 
     // Setter y Getter
     public Long getId() {
