@@ -9,6 +9,4 @@ import java.util.List;
 public interface ProductRepository extends MongoRepository<Product, Long> {
 
     List<Product> findByNameRegexIgnoreCase(String name);
-    ProductDTO addProduct(Product product);
-    void deleteProduct(Long id);
 }
