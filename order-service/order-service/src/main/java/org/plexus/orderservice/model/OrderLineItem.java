@@ -14,7 +14,6 @@ public class OrderLineItem {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "orderId")
     private Order order;

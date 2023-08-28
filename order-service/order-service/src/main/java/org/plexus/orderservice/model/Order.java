@@ -1,24 +1,23 @@
 package org.plexus.orderservice.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "orders")
 @Entity
 public class Order {
     // Instances
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "orderNumber")
     private String orderNumber;
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderLineItem> orderLineItem;
+
+    @Column(name = "price")
     private double price;
 
     // Setter y Getter
@@ -51,6 +50,17 @@ public class Order {
     }
 
     public void setPrice(double price) {
+        this.price = price;
+    }
+
+    // Constructors
+    public Order() {
+    }
+
+    public Order(Long id, String orderNumber, List<OrderLineItem> orderLineItem, double price) {
+        this.id = id;
+        this.orderNumber = orderNumber;
+        this.orderLineItem = orderLineItem;
         this.price = price;
     }
 
