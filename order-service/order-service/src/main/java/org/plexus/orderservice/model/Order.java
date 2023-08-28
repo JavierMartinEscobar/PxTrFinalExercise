@@ -18,7 +18,7 @@ public class Order {
     private List<OrderLineItem> orderLineItem;
     @Column(name = "price")
     private double price;
-    
+
     // Setter y Getter
     public Long getId() {
         return id;
