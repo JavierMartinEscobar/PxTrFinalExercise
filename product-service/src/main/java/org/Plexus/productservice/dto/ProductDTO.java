@@ -1,9 +1,15 @@
 package org.Plexus.productservice.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class ProductDto {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ProductDTO {
     private long id;
     private String name;
     private String description;

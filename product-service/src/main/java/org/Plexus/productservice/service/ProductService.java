@@ -1,5 +1,6 @@
 package org.Plexus.productservice.service;
 
+import org.Plexus.productservice.dto.ProductDTO;
 import org.Plexus.productservice.repository.ProductRepository;
 import org.Plexus.productservice.model.DatabaseSequence;
 import org.Plexus.productservice.model.Product;
@@ -23,6 +24,8 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private MongoOperations mongoOperations;
+    @Autowired
+    private ProductMapper productMapper;
 
     public long generateSequence(String seqName) {
         DatabaseSequence counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
@@ -31,24 +34,28 @@ public class ProductService {
         return !Objects.isNull(counter) ? counter.getSeq() : 1;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts() {
+        return productMapper.toDTOList(productRepository.findAll());
     }
 
-    public Optional<Product> getProductById(long id) {
-        return productRepository.findById(id);
+    public ProductDTO getProductById(long id) {
+        return productMapper.toDTO(productRepository.findById(id).orElseThrow());
     }
 
-    public List<Product> getProductsByName(String name) {
-        return productRepository.findByNameRegexIgnoreCase(name);
+    public Product getProductByIdNoDTO(long id) {
+        return productRepository.findById(id).orElseThrow();
     }
-    public void createProduct(Product p) {
+
+    public List<ProductDTO> getProductsByName(String name) {
+        return productMapper.toDTOList(productRepository.findByNameRegexIgnoreCase(name));
+    }
+    public ProductDTO createProduct(Product p) {
         p.setId(generateSequence(Product.SEQUENCE_NAME));
-        productRepository.save(p);
+        return productMapper.toDTO(productRepository.save(p));
     }
 
-    public void updateProduct(Product p) {
-        productRepository.save(p);
+    public ProductDTO updateProduct(Product p) {
+        return productMapper.toDTO(productRepository.save(p));
     }
 
     public void deleteProduct(long id) {

@@ -1,5 +1,6 @@
 package org.Plexus.productservice.controller;
 
+import org.Plexus.productservice.dto.ProductDTO;
 import org.Plexus.productservice.model.Product;
 import org.Plexus.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(@RequestParam(name = "name", required = false) String name) {
-        List<Product> products;
+    public ResponseEntity<List<ProductDTO>> getAllProducts(@RequestParam(name = "name", required = false) String name) {
+        List<ProductDTO> products;
 
         if(name == null) {
             products = productService.getAllProducts();
@@ -35,9 +36,9 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable long id) {
-        Optional<Product> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable long id) {
+        ProductDTO product = productService.getProductById(id);
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping(consumes = {"application/json"})
@@ -48,26 +49,17 @@ public class ProductController {
 
     @PutMapping(value = "/{id}",  consumes = {"application/json"})
     public ResponseEntity<Product> updateProduct(@Validated @RequestBody Product product, @PathVariable long id) {
-        Optional<Product> dbProduct = productService.getProductById(id);
-        if(dbProduct.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            dbProduct.get().setName(product.getName());
-            dbProduct.get().setDescription(product.getDescription());
-            dbProduct.get().setPrice(product.getPrice());
-            productService.updateProduct(dbProduct.get());
-            return ResponseEntity.ok(dbProduct.get());
-        }
+        Product dbProduct = productService.getProductByIdNoDTO(id);
+        dbProduct.setName(product.getName());
+        dbProduct.setDescription(product.getDescription());
+        dbProduct.setPrice(product.getPrice());
+        productService.updateProduct(dbProduct);
+        return ResponseEntity.ok(dbProduct);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable long id){
-        Optional<Product> dbProduct = productService.getProductById(id);
-        if(dbProduct.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            productService.deleteProduct(id);
-            return ResponseEntity.noContent().build();
-        }
+        productService.deleteProduct(id);
+        return ResponseEntity.ok().build();
     }
 }
