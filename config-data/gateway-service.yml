@@ -7,3 +7,15 @@ eureka:
     register-with-eureka: true
   instance:
     instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+        routes:
+          - id: product-service
+            uri: lb://product-service
+            predicates:
+              -Path=/products/**
