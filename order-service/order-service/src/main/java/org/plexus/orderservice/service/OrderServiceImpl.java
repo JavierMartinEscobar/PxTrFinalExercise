@@ -2,10 +2,8 @@ package org.plexus.orderservice.service;
 
 import org.modelmapper.ModelMapper;
 import org.plexus.orderservice.dto.OrderDTO;
-import org.plexus.orderservice.dto.OrderLineItemDTO;
 import org.plexus.orderservice.exception.ResourceNotFoundException;
 import org.plexus.orderservice.model.Order;
-import org.plexus.orderservice.repository.OrderLineItemRepository;
 import org.plexus.orderservice.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
