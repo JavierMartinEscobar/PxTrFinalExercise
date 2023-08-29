@@ -1,7 +1,6 @@
 package org.plexus.orderservice.service;
 
 import org.plexus.orderservice.dto.OrderDTO;
-import org.plexus.orderservice.dto.OrderLineItemDTO;
 
 import java.util.List;
 
