@@ -1,39 +1,18 @@
 package org.plexus.orderservice.service;
 
-import org.plexus.orderservice.model.Order;
-import org.plexus.orderservice.repository.OrderLineItemRepository;
-import org.plexus.orderservice.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.plexus.orderservice.dto.OrderDTO;
+import org.plexus.orderservice.dto.OrderLineItemDTO;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-public class OrderService {
-    @Autowired
-    private OrderRepository orderRepository;
+public interface OrderService {
+    public OrderDTO createOrder(OrderDTO orderDTO);
 
-    @Autowired
-    private OrderLineItemRepository orderLineItemRepository;
+    public List<OrderDTO> getAllOrders();
 
-    public List<Order> getAll(){
-        return orderRepository.findAll();
-    }
+    public OrderDTO getOrderById(long id);
 
-    public Optional<Order> getOrderById(long id) {
-        return orderRepository.findById(id);
-    }
+    public OrderDTO updateOrder(OrderDTO orderDTO,long id);
 
-    public void createOrder(Order order) {
-        orderRepository.save(order);
-    }
-
-    public void updateOrder(Order order) {
-        orderRepository.save(order);
-    }
-
-    public void deleteOrder(long id) {
-        orderRepository.deleteById(id);
-    }
+    public void deleteOrder(long id);
 }

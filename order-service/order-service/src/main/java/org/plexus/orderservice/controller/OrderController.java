@@ -1,14 +1,14 @@
 package org.plexus.orderservice.controller;
 
-import org.plexus.orderservice.model.Order;
+import org.plexus.orderservice.dto.OrderDTO;
+import org.plexus.orderservice.service.OrderLineItemService;
 import org.plexus.orderservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/orders")
@@ -16,44 +16,33 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private OrderLineItemService orderLineItemService;
+
     @GetMapping
-    public ResponseEntity<List<Order>> getOrders() {
-        return ResponseEntity.ok(orderService.getAll());
+    public List<OrderDTO> getAllOrders() {
+        return orderService.getAllOrders();
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable long id) {
-        Optional<Order> order = orderService.getOrderById(id);
-        return order.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable(name = "id") long id) {
+        return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
-    @PostMapping(consumes = {"application/json"})
-    public ResponseEntity<Order> createOrder(@Validated @RequestBody Order order) {
-        orderService.createOrder(order);
-        return ResponseEntity.ok(order);
+    @PostMapping
+    public ResponseEntity<OrderDTO> saveOrder(@RequestBody OrderDTO orderDTO) {
+        return new ResponseEntity<>(orderService.createOrder(orderDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}",  consumes = {"application/json"})
-    public ResponseEntity<Order> updateOrder(@Validated @RequestBody Order order, @PathVariable long id) {
-        Optional<Order> dbOrder = orderService.getOrderById(id);
-        if(dbOrder.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            dbOrder.get().setOrderNumber(order.getOrderNumber());
-            dbOrder.get().setPrice(order.getPrice());
-            orderService.updateOrder(dbOrder.get());
-            return ResponseEntity.ok(dbOrder.get());
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderDTO> updateOrder(@RequestBody OrderDTO orderDTO, @PathVariable(name = "id") long id) {
+        OrderDTO orderResponse = orderService.updateOrder(orderDTO, id);
+        return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Order> deleteOrder(@PathVariable long id){
-        Optional<Order> dbOrder = orderService.getOrderById(id);
-        if(dbOrder.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            orderService.deleteOrder(id);
-            return ResponseEntity.noContent().build();
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteOrder(@PathVariable(name = "id") long id) {
+        orderService.deleteOrder(id);
+        return new ResponseEntity<>("Order successfully deleted", HttpStatus.OK);
     }
 }

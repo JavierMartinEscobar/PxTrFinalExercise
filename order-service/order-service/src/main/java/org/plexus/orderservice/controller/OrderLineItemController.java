@@ -1,62 +1,46 @@
 package org.plexus.orderservice.controller;
 
-import org.plexus.orderservice.model.OrderLineItem;
+import jakarta.validation.Valid;
+import org.plexus.orderservice.dto.OrderLineItemDTO;
 import org.plexus.orderservice.service.OrderLineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/orderlistitem")
+@RequestMapping("/")
 public class OrderLineItemController {
     @Autowired
     private OrderLineItemService orderLineItemService;
 
-    @GetMapping
-    public ResponseEntity<List<OrderLineItem>> getAllOrderListItems() {
-        List<OrderLineItem> orderLineItems = orderLineItemService.getAll();
-        if(orderLineItems.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(orderLineItems);
+    @GetMapping("/orders/{orderId}/orderLineItems")
+    public List<OrderLineItemDTO> getOrderLineItemByOrderId(@PathVariable(value = "orderId") Long orderId){
+        return orderLineItemService.getOrderLineItemByOrderId(orderId);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderLineItem> getOrderListItemById(@PathVariable Long id) {
-        OrderLineItem orderLineItem = orderLineItemService.getOrderListItemById(id);
-        if(orderLineItem == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(orderLineItem);
+    @GetMapping("/orders/{orderId}/orderLineItems/{id}")
+    public ResponseEntity<OrderLineItemDTO> getOrderLineItemById(@PathVariable(value = "orderId") Long orderId, @PathVariable(value = "id") Long orderLineItemId){
+        OrderLineItemDTO orderLineItemDTO = orderLineItemService.getOrderLineItemById(orderId, orderLineItemId);
+        return new ResponseEntity<>(orderLineItemDTO, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<OrderLineItem> createOrderListItem(@RequestBody OrderLineItem orderLineItem) {
-        OrderLineItem savedOrderLineItem = orderLineItemService.save(orderLineItem);
-        return ResponseEntity.ok(savedOrderLineItem);
+    @PostMapping("/orders/{orderId}/orderLineItems")
+    public ResponseEntity<OrderLineItemDTO> saveOrderLineItem(@PathVariable(value = "orderId") long orderId,@Valid @RequestBody OrderLineItemDTO orderLineItemDTO){
+        return new ResponseEntity<>(orderLineItemService.createOrderLineItem(orderId, orderLineItemDTO),HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", consumes = {"application/json"})
-    public ResponseEntity<OrderLineItem> updateOrderListItem(@PathVariable Long id, @Validated @RequestBody OrderLineItem orderLineItem) {
-        if (!orderLineItemService.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        orderLineItem.setId(id);
-        OrderLineItem updatedOrderLineItem = orderLineItemService.save(orderLineItem);
-        return ResponseEntity.ok(orderLineItem);
+    @PutMapping("/orders/{orderId}/orderLineItems/{id}")
+    public ResponseEntity<OrderLineItemDTO> updateOrderLineItem(@PathVariable(value = "orderId") Long orderId,@PathVariable(value = "id") Long orderLineItemId,@Valid @RequestBody OrderLineItemDTO orderLineItemDTO){
+        OrderLineItemDTO updateOrderLineItem = orderLineItemService.updateOrderLineItem(orderId, orderLineItemId, orderLineItemDTO);
+        return new ResponseEntity<>(updateOrderLineItem,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrderListItem(@PathVariable Long id) {
-        if (!orderLineItemService.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        orderLineItemService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/orders/{orderId}/orderLineItems/{id}")
+    public ResponseEntity<String> deleteOrderLineItem(@PathVariable(value = "orderId") Long orderId,@PathVariable(value = "id") Long orderLineItemId){
+        orderLineItemService.deleteOrderLineItem(orderId, orderLineItemId);
+        return new ResponseEntity<>("Order line item successfully removed",HttpStatus.OK);
     }
 }
-

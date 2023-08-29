@@ -1,23 +1,28 @@
 package org.plexus.orderservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Table(name = "orders")
 @Entity
+@Table(name = "orders", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" }) })
 public class Order {
-    // Instances
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "orderNumber")
+    @Column(name = "orderNumber", nullable = false)
     private String orderNumber;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<OrderLineItem> orderLineItem;
-    @Column(name = "price")
+
+    @Column(name = "price", nullable = false)
     private double price;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderLineItem> orderLineItem;
 
     // Setter y Getter
     public Long getId() {
@@ -54,17 +59,13 @@ public class Order {
 
     // Constructors
     public Order() {
+        super();
     }
 
-    public Order(Long id, String orderNumber, List<OrderLineItem> orderLineItem, double price) {
+    public Order(Long id, String orderNumber, double price) {
+        super();
         this.id = id;
         this.orderNumber = orderNumber;
-        this.orderLineItem = orderLineItem;
         this.price = price;
-    }
-
-    // Methods
-    public String toString() {
-        return "Order[ " + id + ", " + orderNumber + ", " + orderLineItem + ", " + price + "]";
     }
 }

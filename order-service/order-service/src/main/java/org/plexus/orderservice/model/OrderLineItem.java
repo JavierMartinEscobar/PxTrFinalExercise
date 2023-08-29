@@ -1,26 +1,21 @@
 package org.plexus.orderservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Entity
 public class OrderLineItem {
-    // Instances
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "orderId")
-    private Order order;
-
     private String skuCode;
     private double price;
     private int quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     // Getter & Setter
     public Long getId() {
@@ -31,14 +26,7 @@ public class OrderLineItem {
         this.id = id;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
+    // Getter & Setter
     public String getSkuCode() {
         return skuCode;
     }
@@ -63,8 +51,16 @@ public class OrderLineItem {
         this.quantity = quantity;
     }
 
-    // Methods
-    public String toString() {
-        return "OrderListItem[ " + id + ", " + skuCode + ", " + price + ", " + quantity + "]";
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    // Constructor
+    public OrderLineItem() {
+        super();
     }
 }
