@@ -8,7 +8,7 @@ eureka:
     service url:
       default-zone: http://${eureka.instance.hostname}:${server.port}/eureka/
   instance:
-    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    hostname: localhost
 
 spring:
   cloud:
@@ -20,4 +20,4 @@ spring:
           - id: product-service
             uri: lb://product-service
             predicates:
-              -Path=/products/**
+              - Path=/products/**
