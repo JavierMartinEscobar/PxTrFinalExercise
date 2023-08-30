@@ -2,7 +2,6 @@ package org.plexus.orderservice.model;
 
 import jakarta.persistence.*;
 
-
 @Entity
 public class OrderLineItem {
     @Id
